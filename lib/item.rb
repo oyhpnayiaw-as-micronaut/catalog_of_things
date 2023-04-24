@@ -1,6 +1,8 @@
 require 'securerandom'
 
 class Item
+  attr_reader :genre, :author, :source, :label, :publish_date
+  
   def initialize(genre, author, source, label, publish_date)
     @id = SecureRandom.uuid
     @genre = genre
