@@ -132,6 +132,17 @@ bundle exec rspec
  - Twitter: [@oyhpnayiaw](https://twitter.com/oyhpnayiaw) 
  - LinkedIn: [@oyhpnayiaw](https://linkedin.com/in/oyhpnayiaw) 
 
+**Rabecca Nabwire**
+
+ - Github: [@Becky449](https://github.com/Becky449) 
+ - Twitter: [@rabeccanab](https://twitter.com/rabeccanab) 
+ - LinkedIn: [@rabeccanabwire](https://www.linkedin.com/in/rabeccanabwire/) 
+
+**Innocent N.**
+ - GitHub: [@chaseknis](https://github.com/Chaseknis)
+ - Twitter: [@ChaseToTheWorld](https://twitter.com/chasetotheworld)
+ - LinkedIn: [Innocent N.](https://www.linkedin.com/in/innocent-n-200826252/)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🔭 Future Features <a name="future-features"></a>
