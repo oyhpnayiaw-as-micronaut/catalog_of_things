@@ -6,8 +6,8 @@ def run
   option = gets.chomp.to_i
   return unless option == 3
 
-  exit
   puts 'Thank you for using our app'
+  exit
 end
 
 loop { run }
