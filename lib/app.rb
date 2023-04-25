@@ -1,11 +1,13 @@
 require 'date'
 
+require_relative 'store'
 require_relative 'table'
 require_relative 'question'
 require_relative 'genre'
 require_relative 'music_album'
 
 class App
+  include Store
   include Table
   include Question
 
@@ -13,9 +15,15 @@ class App
 
   def initialize
     @genres = []
-    @authors = []
-    @labels = []
+    # @authors = []
+    # @labels = []
     @music_albums = []
+
+    hash = load_all_data
+
+    hash.each do |key, value|
+      instance_variable_set("@#{key}", value)
+    end
   end
 
   def list_music_albums
@@ -70,7 +78,7 @@ class App
 
   def item_to_list(item)
     [
-      item.genre.name,
+      item&.genre&.name,
       'Jon', # album.author.first_name,
       'Doe', # album.label.name,
       item.publish_date
