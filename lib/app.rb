@@ -64,17 +64,8 @@ class App
 
   private
 
-  def create_genre
-    name = ask 'What is the genre name?'
-    genre = Genre.new(name)
-    puts "Genre #{genre.name} created"
-
-    @genres << genre
-    genre
-  end
-
   def create_item
-    genre = ask_question('Genre', @genres, method(:create_genre), 'name')
+    genre = ask_question(Genre, @genres, 'name')
     author = nil
     label = nil
     publish_date = ask 'What is the publish date? (YYYY-MM-DD)'
