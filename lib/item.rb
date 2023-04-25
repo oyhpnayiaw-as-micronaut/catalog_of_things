@@ -1,11 +1,10 @@
 class Item
-  attr_reader :genre, :author, :source, :label, :publish_date
+  attr_reader :genre, :author, :label, :publish_date
 
-  def initialize(genre:, author:, source:, label:, publish_date:)
+  def initialize(genre:, author:, label:, publish_date:)
     @id = Random.rand(1000)
     self.genre = genre
     self.author = author
-    self.source = source
     self.label = label
     @publish_date = publish_date
     @archived = false
@@ -30,12 +29,6 @@ class Item
     @author&.items&.delete(self)
     @author = author
     @author&.items&.<< self
-  end
-
-  def source=(source)
-    @source&.items&.delete(self)
-    @source = source
-    @source&.items&.<< self
   end
 
   def label=(label)
