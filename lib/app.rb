@@ -22,7 +22,7 @@ class App
     puts 'Music Albums'
     arr = [ITEM_HEADER + ['On Spotify']]
     @music_albums.each do |album|
-      arr << item_to_list(album).concat([album.on_spotify ? 'Yes' : 'No'])
+      arr << item_to_list(album).push(album.on_spotify ? 'Yes' : 'No')
     end
     arr.to_table
   end
