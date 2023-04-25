@@ -22,13 +22,7 @@ class App
     puts 'Music Albums'
     arr = [ITEM_HEADER + ['On Spotify']]
     @music_albums.each do |album|
-      arr << [
-        album.genre.name,
-        'Jon', # album.author.first_name,
-        'Doe', # album.label.name,
-        album.publish_date,
-        album.on_spotify
-      ]
+      arr << item_to_list(album).concat([album.on_spotify ? 'Yes' : 'No'])
     end
     arr.to_table
   end
@@ -72,5 +66,14 @@ class App
     publish_date = Date.parse(publish_date)
 
     [genre, author, label, publish_date]
+  end
+
+  def item_to_list(item)
+    [
+      item.genre.name,
+      'Jon', # album.author.first_name,
+      'Doe', # album.label.name,
+      item.publish_date
+    ]
   end
 end
