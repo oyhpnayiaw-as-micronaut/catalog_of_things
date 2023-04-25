@@ -2,6 +2,12 @@ require_relative 'lib/app'
 
 APP = App.new
 
+def end_app
+  puts 'Thank you for using our app'
+  APP.save_data
+  exit
+end
+
 def run
   puts "Welcome to our App
   1) List all books
@@ -37,12 +43,12 @@ def run
   when 9
     puts 'Option 9'
   when 0
-    puts 'Thank you for using our app'
-    exit
+    end_app
+  else
+    puts 'Invalid option'
   end
 rescue Interrupt
-  puts "\nThank you for using our app"
-  exit
+  end_app
 end
 
 loop { run }
