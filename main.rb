@@ -5,9 +5,10 @@ def run
     3.Quit"
     option = gets.chomp.to_i
     if option == 3 
-        exit
         puts 'Thank you for using our app'
+        exit
     end
 end
 
 loop { run }
+
