@@ -11,7 +11,7 @@ end
 puts "Welcome to the app\n\n"
 
 def run
-  puts <<~EOF
+  puts <<~OPTIONS
     1) List all books
     2) List all music albums
     3) List all games
@@ -22,7 +22,7 @@ def run
     8) Add a music album
     9) Add a game
     0) Exit
-  EOF
+  OPTIONS
 
   option = gets.chomp.to_i
 
