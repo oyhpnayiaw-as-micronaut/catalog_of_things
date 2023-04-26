@@ -82,9 +82,9 @@ module Question
 
     sym = sym.to_s
 
-    if sym.include?('date')
+    if sym.end_with?('_date')
       ask_date(question)
-    elsif sym.include?('?')
+    elsif sym.end_with?('?')
       ask("#{question} (y/n)") == 'y'
     else
       ask(question)
