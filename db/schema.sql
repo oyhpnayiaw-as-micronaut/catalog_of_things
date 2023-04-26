@@ -12,13 +12,28 @@ CREATE TABLE Item(
 );
 
 CREATE TABLE Genre(
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE Author(
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(255) NOT NULL
+  last_name VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE MusicAlbum(
-  id INTEGER PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   on_spotify BOOLEAN NOT NULL,
+  item_id INTEGER NOT NULL,
+
+  FOREIGN KEY (item_id) REFERENCES Item(id)
+);
+
+CREATE TABLE Game(
+  id SERIAL PRIMARY KEY,
+  multiplayer VARCHAR(255) NOT NULL,
+  last_played_at DATE,
   item_id INTEGER NOT NULL,
 
   FOREIGN KEY (item_id) REFERENCES Item(id)
