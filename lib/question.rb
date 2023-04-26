@@ -1,3 +1,5 @@
+require 'date'
+
 require_relative 'utils'
 
 module Question
@@ -63,5 +65,13 @@ module Question
   def ask(question)
     puts question
     gets.chomp
+  end
+
+  def ask_date(question)
+    date = ask(question)
+    date = Date.parse(date)
+  rescue Date::Error
+    puts 'Invalid date format please try again'
+    retry
   end
 end

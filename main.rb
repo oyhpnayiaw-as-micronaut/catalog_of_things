@@ -8,19 +8,22 @@ def end_app
   exit
 end
 
+puts "Welcome to the app\n\n"
+
 def run
-  puts "Welcome to our App
-  1) List all books
-  2) List all music albums
-  3) List all games
-  4) List all genres
-  5) List all labels
-  6) List all authors
-  7) Add a book
-  8) Add a music album
-  9) Add a game
-  0) Exit
-"
+  puts <<~EOF
+    1) List all books
+    2) List all music albums
+    3) List all games
+    4) List all genres
+    5) List all labels
+    6) List all authors
+    7) Add a book
+    8) Add a music album
+    9) Add a game
+    0) Exit
+  EOF
+
   option = gets.chomp.to_i
 
   case option
