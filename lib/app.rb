@@ -1,12 +1,12 @@
-require_relative 'store'
-require_relative 'table'
-require_relative 'question'
-require_relative 'genre'
-require_relative 'music_album'
-require_relative 'book'
-require_relative 'label'
-require_relative 'game'
-require_relative 'author'
+require_relative 'models/genre'
+require_relative 'models/music_album'
+require_relative 'models/book'
+require_relative 'models/label'
+require_relative 'models/game'
+require_relative 'models/author'
+require_relative 'modules/store'
+require_relative 'modules/table'
+require_relative 'modules/question'
 
 class App
   include Store

@@ -73,7 +73,7 @@ module Store
 
   # Create a path to save or load data
   def create_path(name)
-    File.join(File.dirname(__dir__), 'data', "#{name}.json")
+    File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'data', "#{name}.json"))
   end
 
   # Convert class instance to hash
