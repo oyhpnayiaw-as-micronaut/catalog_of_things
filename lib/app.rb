@@ -7,6 +7,8 @@ require_relative 'genre'
 require_relative 'music_album'
 require_relative 'book'
 require_relative 'label'
+require_relative 'game'
+require_relative 'author'
 
 class App
   include Store
@@ -17,10 +19,11 @@ class App
 
   def initialize
     @genres = []
-    # @authors = []
+    @authors = []
     @labels = []
     @books = []
     @music_albums = []
+    @games = []
 
     hash = load_all_data
 
@@ -53,12 +56,27 @@ class App
     puts "----------------------\n\n"
   end
 
+  def create_game
+    multiplayer = ask 'Is this a multiplayer? (y/n)'
+    multiplayer = multiplayer == 'y'
+
+    last_played_at = ask 'When was it last played? (YYYY-MM-DD)'
+    last_played_at = Date.parse(last_played_at)
+
+    game = Game.new(**create_item, multiplayer: multiplayer, last_played_at: last_played_at)
+
+    @games << game
+
+    puts 'Game created'
+    puts "----------------------\n\n"
+  end
+
   private
 
   # this method will ask common questions to create an item
   def create_item
     genre = ask_question(Genre, @genres)
-    author = nil
+    author = ask_question(Author, @authors)
     label = ask_question(Label, @labels)
     publish_date = ask 'What is the publish date? (YYYY-MM-DD)'
     publish_date = Date.parse(publish_date)
