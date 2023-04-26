@@ -1,7 +1,7 @@
 require 'date'
 
-require_relative '../lib/item'
-require_relative '../lib/genre'
+require_relative '../lib/models/item'
+require_relative '../lib/models/genre'
 
 describe Genre do
   let(:genre) { Genre.new('Action') }

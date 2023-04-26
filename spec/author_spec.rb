@@ -1,7 +1,7 @@
 require 'date'
 
-require_relative '../lib/item'
-require_relative '../lib/author'
+require_relative '../lib/models/item'
+require_relative '../lib/models/author'
 
 describe Author do
   let(:author) { Author.new('John', 'Doe') }

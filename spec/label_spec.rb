@@ -1,7 +1,7 @@
 require 'date'
 
-require_relative '../lib/item'
-require_relative '../lib/label'
+require_relative '../lib/models/item'
+require_relative '../lib/models/label'
 
 describe Label do
   let(:label) { Label.new('Title', 'Color') }

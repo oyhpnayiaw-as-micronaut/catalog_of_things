@@ -1,7 +1,7 @@
 require 'date'
 
-require_relative '../lib/item'
-require_relative '../lib/game'
+require_relative '../lib/models/item'
+require_relative '../lib/models/game'
 
 describe Game do
   let(:game) do

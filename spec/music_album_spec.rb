@@ -1,7 +1,7 @@
 require 'date'
 
-require_relative '../lib/item'
-require_relative '../lib/music_album'
+require_relative '../lib/models/item'
+require_relative '../lib/models/music_album'
 
 describe MusicAlbum do
   let(:music_album) do

@@ -1,7 +1,7 @@
 require 'date'
 
-require_relative '../lib/item'
-require_relative '../lib/book'
+require_relative '../lib/models/item'
+require_relative '../lib/models/book'
 
 describe Book do
   let(:book) do
