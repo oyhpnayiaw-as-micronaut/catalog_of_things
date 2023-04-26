@@ -1,5 +1,3 @@
-require 'date'
-
 require_relative 'store'
 require_relative 'table'
 require_relative 'question'
@@ -60,8 +58,7 @@ class App
     multiplayer = ask 'Is this a multiplayer? (y/n)'
     multiplayer = multiplayer == 'y'
 
-    last_played_at = ask 'When was it last played? (YYYY-MM-DD)'
-    last_played_at = Date.parse(last_played_at)
+    last_played_at = ask_date 'When was it last played? (YYYY-MM-DD)'
 
     game = Game.new(**create_item, multiplayer: multiplayer, last_played_at: last_played_at)
 
@@ -78,8 +75,7 @@ class App
     genre = ask_question(Genre, @genres)
     author = ask_question(Author, @authors)
     label = ask_question(Label, @labels)
-    publish_date = ask 'What is the publish date? (YYYY-MM-DD)'
-    publish_date = Date.parse(publish_date)
+    publish_date = ask_date 'What is the publish date? (YYYY-MM-DD)'
 
     { genre: genre, author: author, label: label, publish_date: publish_date }
   end
