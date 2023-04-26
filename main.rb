@@ -29,19 +29,19 @@ def run
   when 2
     APP.list_music_albums
   when 3
-    puts 'Option 3'
+    APP.list_games
   when 4
     APP.list_genres
   when 5
     APP.list_labels
   when 6
-    puts 'Option 6'
+    APP.list_authors
   when 7
     APP.create_book
   when 8
     APP.create_music_album
   when 9
-    puts 'Option 9'
+    APP.create_game
   when 0
     end_app
   else
