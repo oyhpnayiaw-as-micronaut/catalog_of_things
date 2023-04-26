@@ -2,7 +2,7 @@ require 'date'
 
 require_relative 'utils'
 
-module Question
+module Prompt
   include Utils
 
   private

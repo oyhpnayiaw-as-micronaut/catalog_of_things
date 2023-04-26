@@ -8,13 +8,13 @@ require_relative 'models/music_album'
 
 require_relative 'modules/store'
 require_relative 'modules/table'
-require_relative 'modules/question'
+require_relative 'modules/prompt'
 require_relative 'modules/utils'
 
 class App
   include Store
   include Table
-  include Question
+  include Prompt
   include Utils
 
   def initialize
