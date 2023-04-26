@@ -42,7 +42,7 @@ class App
 
   # this method will ask common questions to create an item
   def create_item
-    genre = ask_question(Genre, @genres, 'name')
+    genre = ask_question(Genre, @genres)
     author = nil
     label = nil
     publish_date = ask 'What is the publish date? (YYYY-MM-DD)'

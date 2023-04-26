@@ -7,14 +7,12 @@ module Question
 
   # klass - Name of the class(Genre, Author, Label)
   # list - Item list from which to select
-  # attr_key - Attribute key to display in the list
   # create_item_callback - Callback to create item if user wants to create
   # You can pass you own callback to create item if you think the default one is unsafe
   # See create_sub_item below for more info
   def ask_question(
     klass,
     list,
-    attr_key = nil,
     create_item_callback = nil
   )
     # this method will ask question according to the parameters of the initialize method of the class
@@ -40,19 +38,18 @@ module Question
 
     return create_item_callback.call if result == '1'
 
-    select(list, klass, attr_key)
+    select(list, klass)
   end
 
   # select item from the list
   # list - Item list from which to select
   # klass - Class object to create
-  # attr_key - Attribute key to display in the list
-  def select(list, klass, attr_key)
+  def select(list, klass)
     loop do
       puts "Select #{klass} from the list below by number"
 
       list.each_with_index do |item, index|
-        puts "#{index + 1}). #{item.instance_variable_get("@#{attr_key}")}"
+        puts "#{index + 1}). #{item}"
       end
 
       index = gets.chomp.to_i
