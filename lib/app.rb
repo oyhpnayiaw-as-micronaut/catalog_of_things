@@ -5,6 +5,8 @@ require_relative 'table'
 require_relative 'question'
 require_relative 'genre'
 require_relative 'music_album'
+require_relative 'book'
+require_relative 'label'
 
 class App
   include Store
@@ -16,7 +18,8 @@ class App
   def initialize
     @genres = []
     # @authors = []
-    # @labels = []
+    @labels = []
+    @books = []
     @music_albums = []
 
     hash = load_all_data
@@ -24,6 +27,18 @@ class App
     hash.each do |key, value|
       instance_variable_set("@#{key}", value || [])
     end
+  end
+
+  def create_book
+    publisher = ask 'Who published this book?'
+    cover_state = ask 'Is the book cover good or bad?'
+
+    book = Book.new(**create_item, publisher: publisher, cover_state: cover_state)
+
+    @books << book
+
+    puts 'Book created'
+    puts "----------------------\n\n"
   end
 
   def create_music_album
@@ -44,7 +59,7 @@ class App
   def create_item
     genre = ask_question(Genre, @genres)
     author = nil
-    label = nil
+    label = ask_question(Label, @labels)
     publish_date = ask 'What is the publish date? (YYYY-MM-DD)'
     publish_date = Date.parse(publish_date)
 
