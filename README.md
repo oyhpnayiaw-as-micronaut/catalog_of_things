@@ -10,7 +10,6 @@
   - [🛠 Built With](#built-with)
     - [Tech Stack](#tech-stack)
     - [Key Features](#key-features)
-  - [🚀 Live Demo](#live-demo)
 - [💻 Getting Started](#getting-started)
   - [Setup](#setup)
   - [Prerequisites](#prerequisites)
@@ -34,14 +33,10 @@ A console app that will help you to keep a record of different types of things y
 
 ### Tech Stack <a name="tech-stack"></a>
 
-
-
-
 <details>
 <summary>Client</summary>
 <ul><li>Ruby</li></ul>
 </details>
-
 
 
 <details>
@@ -49,12 +44,7 @@ A console app that will help you to keep a record of different types of things y
 <ul><li>Ruby</li></ul>
 </details>
 
-
-
-
-
 ### Key Features <a name="key-features"></a>
-
 
 
 - **Console app**
@@ -62,17 +52,6 @@ A console app that will help you to keep a record of different types of things y
 - **Create books**
 
 - **Create musics**
-
-
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## 🚀 Live Demo <a name="live-demo"></a>
-
-
-- **Live demo not available at this time**
-
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
