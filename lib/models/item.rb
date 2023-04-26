@@ -15,19 +15,12 @@ class Item
     self.genre = genre
     self.author = author
     self.label = label
-    @publish_date = publish_date
     @archived = false
-  end
-
-  def to_hash
-    {
-      id: @id,
-      genre: @genre&.instance_variable_get(:@id),
-      author: @author&.instance_variable_get(:@id),
-      label: @label&.instance_variable_get(:@id),
-      publish_date: @publish_date,
-      archived: @archived
-    }
+    @publish_date = begin
+      Date.parse(publish_date.to_s)
+    rescue StandardError
+      nil
+    end
   end
 
   def self.from_hash(hash, data = {})
@@ -40,8 +33,6 @@ class Item
       end
     end
 
-    ctor_hash[:publish_date] = Date.parse(ctor_hash[:publish_date])
-
     item = new(**ctor_hash)
 
     rest_hash = hash.reject { |key, _| parameters.include?(key) }
@@ -52,6 +43,8 @@ class Item
   end
 
   def can_be_archived?
+    return false if @publish_date.nil?
+
     @publish_date < Date.today.prev_year(10)
   end
 

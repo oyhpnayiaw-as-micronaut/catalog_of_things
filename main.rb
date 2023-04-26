@@ -2,12 +2,6 @@ require_relative 'lib/app'
 
 APP = App.new
 
-def end_app
-  puts 'Thank you for using our app'
-  APP.save_data
-  exit
-end
-
 puts "Welcome to the app\n\n"
 
 def run
@@ -40,11 +34,11 @@ def run
   when 6
     APP.list_authors
   when 7
-    APP.create_book
+    APP.create_book({ publisher: 'Who published this book?', cover_state: 'Is the book cover good or bad?' })
   when 8
-    APP.create_music_album
+    APP.create_music_album({ on_spotify?: 'Is this album on Spotify' })
   when 9
-    APP.create_game
+    APP.create_game({ multiplayer?: 'Is this a multiplayer?', last_played_at_date: 'When was it last played?' })
   when 0
     end_app
   else
@@ -52,6 +46,12 @@ def run
   end
 rescue Interrupt
   end_app
+end
+
+def end_app
+  puts 'Thank you for using our app'
+  APP.save_data
+  exit
 end
 
 loop { run }

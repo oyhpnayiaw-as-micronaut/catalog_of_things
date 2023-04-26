@@ -11,7 +11,7 @@ module Question
   # list - Item list from which to select
   # create_item_callback - Callback to create item if user wants to create
   # You can pass you own callback to create item if you think the default one is unsafe
-  # See create_sub_item below for more info
+  # See default_create_item_callback below for more info
   def ask_question(
     klass,
     list,
@@ -68,10 +68,26 @@ module Question
   end
 
   def ask_date(question)
-    date = ask(question)
+    date = ask("#{question} (YYYY-MM-DD)")
     date = Date.parse(date)
   rescue Date::Error
     puts 'Invalid date format please try again'
     retry
+  end
+
+  def ask_by_type(sym, question = nil)
+    question = to_sentence_case(sym) if question.nil?
+    question = question.delete_suffix('?')
+    question += '?'
+
+    sym = sym.to_s
+
+    if sym.include?('date')
+      ask_date(question)
+    elsif sym.include?('?')
+      ask("#{question} (y/n)") == 'y'
+    else
+      ask(question)
+    end
   end
 end
