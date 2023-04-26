@@ -7,7 +7,7 @@ class ::Symbol
 end
 
 class Item
-  attr_reader :genre, :author, :label, :publish_date
+  attr_accessor :genre, :author, :label, :publish_date
 
   def initialize(genre:, author:, label:, publish_date:)
     @id = Random.rand(1000)
