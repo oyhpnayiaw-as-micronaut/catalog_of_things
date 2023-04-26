@@ -25,7 +25,7 @@ def run
 
   case option
   when 1
-    puts 'Option 1'
+    APP.list_books
   when 2
     APP.list_music_albums
   when 3
@@ -33,11 +33,11 @@ def run
   when 4
     APP.list_genres
   when 5
-    puts 'Option 5'
+    APP.list_labels
   when 6
     puts 'Option 6'
   when 7
-    puts 'Option 7'
+    APP.create_book
   when 8
     APP.create_music_album
   when 9
