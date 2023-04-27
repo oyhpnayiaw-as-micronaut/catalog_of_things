@@ -24,7 +24,7 @@ module Store
 
     instance_variables.each do |var|
       name = var.to_s.delete('@')
-      klass = str_to_class(name)
+      klass = convert_to_class(name)
       if klass < Item
         items_hash[name.to_sym] = load_json(name, klass, raw: true)
       else
@@ -34,7 +34,7 @@ module Store
 
     items_hash.each do |key, _|
       items_hash[key] = items_hash[key].map do |h|
-        klass = str_to_class(key)
+        klass = convert_to_class(key)
 
         # I created a separate class method to use for item classes
         # cuz it's depends on the data

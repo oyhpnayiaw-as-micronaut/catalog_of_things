@@ -1,3 +1,5 @@
+require 'io/console'
+
 require_relative 'modules/store'
 require_relative 'modules/table'
 require_relative 'modules/prompt'
@@ -9,15 +11,31 @@ class App
   include Prompt
   include Utils
 
-  def initialize
-    models = []
+  @@models = []
+  @@hidden_list = []
+  @@hidden_create = []
+
+  # models: array of models that come from outside of the models folder (ps. you need to import them at the entry point of the app. e.g: main.rb)
+  # hidden_list: array of models that you don't want to show in the list (on the console)
+  # hidden_create: array of models that you don't want to show in the create (on the console)
+  def initialize(models: [], hidden_list: [], hidden_create: [])
+    @@hidden_list = hidden_list
+    @@hidden_create = hidden_create
 
     Dir[File.join(__dir__, 'models', '*.rb')].sort.each do |file|
       require file
       file_name = pluralize(File.basename(file, '.rb'))
-      models << file_name
+      @@models << file_name
 
       instance_variable_set("@#{file_name}", [])
+    end
+
+    models.each do |model|
+      next if @@models.include?(model) || !model.is_a?(Symbol)
+      next unless class_is_defined?(model)
+
+      @@models << pluralize(singularize(model)).to_sym
+      instance_variable_set("@#{model}", [])
     end
 
     load_saved_data.each do |key, value|
@@ -25,24 +43,87 @@ class App
     end
   end
 
+  def start
+    options = []
+    @@models.each do |model|
+      unless @@hidden_list.include?(singularize(model).to_sym)
+        options << {
+          message: "List all #{to_sentence_case(model).downcase}",
+          handler: "list_#{model}"
+        }
+      end
+
+      # rubocop:disable Style/Next
+      unless @@hidden_create.include?(singularize(model).to_sym)
+        options << {
+          message: "Add a new #{singularize(to_sentence_case(model).downcase)}",
+          handler: "add_#{model}"
+        }
+      end
+    end
+
+    options.sort_by! { |option| option[:message] }.reverse!
+
+    puts "Welcome to the app!\n\n"
+
+    loop do
+      puts 'Please select an option:'
+
+      options.each_with_index do |option, i|
+        puts "#{i + 1}). #{option[:message]}"
+      end
+      puts "\nPress q to exit or select an option:"
+
+      print '> '
+      option = $stdin.getch
+      exit_app if option == 'q'
+
+      clear_console
+
+      if option.to_i.between?(1, options.size)
+        method = options[option.to_i - 1][:handler]
+        send(method)
+      else
+        puts 'Invalid option'
+      end
+
+      puts 'Press q to exit or any other key to continue'
+      exit_app if $stdin.getch == 'q'
+
+      clear_console
+    end
+  rescue Interrupt
+    exit_app
+  end
+
   private
+
+  def clear_console
+    system('clear') || system('cls')
+  end
+
+  def exit_app
+    puts "\nThank you for using our app."
+    save_data
+    exit
+  end
 
   def method_missing(method_name, *args, &block)
     if method_name.to_s.start_with?('list_')
       list_handler(method_name)
-    elsif method_name.to_s.start_with?('create_')
-      create_handler(method_name, *args)
+    elsif method_name.to_s.start_with?('add_')
+      add_handler(method_name, *args)
     else
       super
     end
   end
 
   def respond_to_missing?(method_name, include_private = false)
-    method_name.to_s.start_with?('list_') || method_name.to_s.start_with?('create_') || super
+    method_name.to_s.start_with?('list_') || method_name.to_s.start_with?('add_') || super
   end
 
-  def create_handler(method_name, *args)
-    klass = str_to_class(method_name.to_s.split('_')[1..].join('_'))
+  def add_handler(method_name, *args)
+    klass = convert_to_class(method_name.to_s.split('_')[1..].join('_'))
 
     pos_params, key_params = get_specific_parameters(klass)
 

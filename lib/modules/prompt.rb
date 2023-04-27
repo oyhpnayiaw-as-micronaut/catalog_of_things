@@ -67,6 +67,11 @@ module Prompt
     gets.chomp
   end
 
+  def ask_inline(question)
+    print question
+    gets.chomp
+  end
+
   def ask_date(question)
     date = ask("#{question} (YYYY-MM-DD)")
     date = Date.parse(date)

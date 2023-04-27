@@ -39,21 +39,6 @@ module Utils
     hash
   end
 
-  # Convert a string to an actual class
-  # Reseach Object.const_get to understand this method
-  def str_to_class(str, remove_s: true)
-    klass = str.to_s.split('_').map(&:capitalize).join
-    klass.chop! if klass.end_with?('s') && remove_s
-    return Object.const_get(klass) if Object.const_defined?(klass)
-
-    puts "#{klass} is not a valid class."
-    exit 1
-  end
-
-  def to_sentence_case(str = '')
-    str.to_s.split('_').map(&:capitalize).join(' ')
-  end
-
   def get_parameters(klass)
     klass.instance_method(:initialize).parameters
   end
@@ -66,6 +51,28 @@ module Utils
     [pos_params, key_params]
   end
 
+  # Convert a string to an actual class only pass snake_case to this method
+  def convert_to_class(sym)
+    sym = to_class_case(singularize(sym)).to_sym
+    return Object.const_get(sym) if class_is_defined?(sym, class_case: false)
+
+    puts "#{sym} is not a valid class."
+    exit 1
+  end
+
+  def class_is_defined?(sym, class_case: true)
+    sym = to_class_case(sym).to_sym if class_case
+    Object.const_defined?(sym)
+  end
+
+  def to_class_case(str)
+    str.to_s.split('_').map(&:capitalize).join
+  end
+
+  def to_sentence_case(str = '')
+    str.to_s.split('_').map(&:capitalize).join(' ')
+  end
+
   def pluralize(item)
     item = item.to_s
     return item if item.end_with?('s')
@@ -74,5 +81,14 @@ module Utils
     return "#{item[0..-2]}ies" if item.end_with?('y')
 
     "#{item}s".to_sym
+  end
+
+  def singularize(item)
+    item = item.to_s
+    return item if !item.end_with?('s') || item.end_with?('ss')
+
+    return "#{item[0..-3]}y" if item.end_with?('ies')
+
+    item[0..-2].to_sym
   end
 end
