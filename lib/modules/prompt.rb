@@ -7,40 +7,50 @@ module Prompt
 
   private
 
-  # klass - Name of the class(Genre, Author, Label)
-  # list - Item list from which to select
-  # create_item_callback - Callback to create item if user wants to create
-  # You can pass you own callback to create item if you think the default one is unsafe
-  # See default_create_item_callback below for more info
-  def ask_question(
-    klass,
-    list,
-    create_item_callback = nil
-  )
-    # this method will ask question according to the parameters of the initialize method of the class
-    # pass the create_item_callback if you think this is unsafe
-    default_create_item_callback = lambda do
-      fields = get_parameters(klass).map { |param| param[1] }
+  def ask_question(name, questions: {})
+    klass = convert_to_class(name)
 
-      hash = {}
-      fields.map do |field|
-        hash[field] = ask "What is the #{field} of #{klass}?"
+    params = get_parameters(klass).map { |param| param[1] }
+    depends_on = klass.depends_on if klass.respond_to?(:depends_on)
+
+    hash = {}
+    params.each do |param|
+      if depends_on.nil? || depends_on.empty? || !depends_on.include?(param)
+        possible_questions = questions[singularize(name)] || {}
+        val = possible_questions.find { |k, _v| k.to_s.include?(param.to_s) }
+        type = val&.first || param
+        question = val&.last || "What is the #{param} for #{to_sentence_case(singularize(name))}?"
+        hash[param] = ask_by_type(type, question)
+        next
       end
 
-      item = from_hash(klass, hash)
-      list << item
-      item
+      list = instance_variable_get("@#{pluralize(param)}")
+
+      if list.nil? || list.empty?
+        hash[param] = ask_question(param, questions: questions)
+        next
+      end
+
+      result = ask "Do you want to create #{param}(1) or select from the #{param} list(2)?[1/2]"
+
+      unless [1, 2].include?(result.to_i)
+        puts 'Invalid selection'
+        redo
+      end
+
+      if result == '1'
+        hash[param] = ask_question(param, questions: questions)
+        next
+      end
+
+      hash[param] = select(list, param)
+      next
     end
 
-    create_item_callback ||= default_create_item_callback
-
-    return create_item_callback.call if list.empty?
-
-    result = ask "Do you want to create #{klass}(1) or select from the #{klass} list(2)?[1/2]"
-
-    return create_item_callback.call if result == '1'
-
-    select(list, klass)
+    model = from_hash(klass, hash, is_new: true)
+    list = instance_variable_get("@#{pluralize(name)}")
+    list << model
+    model
   end
 
   # select item from the list

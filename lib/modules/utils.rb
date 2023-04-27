@@ -7,11 +7,11 @@ module Utils
   # data - Hash object with other class data to use in current klass
   #   - eg: { items: [item1, item2] }
   #   - klass will find item according to the id in the hash
-  def from_hash(klass, hash, data: {})
+  def from_hash(klass, hash, data: {}, is_new: false)
     pos_params, key_params = get_specific_parameters(klass)
-    depends_on = klass.depends_on if klass.respond_to?(:depends_on)
+    depends_on = klass.depends_on if klass.respond_to?(:depends_on) && !is_new
 
-    find = ->(param) { data[pluralize(param)].find { |item| item.instance_variable_get(:@id) == hash[param] } }
+    find = ->(param) { data[pluralize(param)]&.find { |item| item.instance_variable_get(:@id) == hash[param] } }
 
     pos_params = pos_params.map do |param|
       if depends_on&.include?(param)

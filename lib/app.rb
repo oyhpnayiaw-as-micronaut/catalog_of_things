@@ -14,14 +14,16 @@ class App
   @@models = []
   @@hidden_list = []
   @@hidden_create = []
+  @@questions = {}
 
   # models: array of models that come from outside of the models folder
   #  - ps. you need to import them at the entry point of the app. e.g: main.rb
   # hidden_list: array of models that you don't want to show in the list (on the console)
   # hidden_create: array of models that you don't want to show in the create (on the console)
-  def initialize(models: [], hidden_list: [], hidden_create: [])
+  def initialize(models: [], hidden_list: [], hidden_create: [], questions: {})
     @@hidden_list = hidden_list
     @@hidden_create = hidden_create
+    @@questions = questions
 
     Dir[File.join(__dir__, 'models', '*.rb')].sort.each do |file|
       require file
@@ -122,41 +124,24 @@ class App
     method_name.to_s.start_with?('list_') || method_name.to_s.start_with?('add_') || super
   end
 
-  def handle_add_method(method_name, *args)
-    klass = convert_to_class(method_name.to_s.split('_')[1..].join('_'))
-
-    pos_params, key_params = get_specific_parameters(klass)
-
-    hash = {}
-    if klass < Item
-      hash = create_item
-      pos_params -= hash.keys
-      key_params -= hash.keys
-    end
-
-    args = args.first if args.first.is_a?(Hash)
-
-    (pos_params + key_params).each_with_index do |param, i|
-      arg = args.find { |k, _v| k.to_s.include?(param.to_s) }
-      type = arg&.first || param
-      question = arg&.last
-
-      if i < pos_params.size
-        pos_params[i] = ask_by_type(type, question)
-      else
-        hash[param] = ask_by_type(type, question)
-      end
-    end
-
-    list, = find_array_by_method_name(method_name)
-
-    list << klass.new(*pos_params, **hash)
-
-    puts "#{klass} successfully created!\n----------------------\n\n"
+  def handle_add_method(method_name)
+    model_name = method_name.to_s.split('_')[1..].join('_')
+    ask_question(model_name, questions: @@questions)
   end
 
   def handle_list_method(method_name)
-    list, var_name = find_array_by_method_name(method_name)
+    var_name = pluralize(method_name).to_s.split('_')[1..].join('_')
+    list = instance_variable_get("@#{var_name}")
+
+    if list.nil?
+      puts "@#{var_name} does not exist."
+      return
+    end
+
+    unless list.is_a?(Array)
+      puts "@#{var_name} is not a list."
+      return
+    end
 
     if list.empty?
       puts "There are no items in the #{var_name}."
@@ -185,34 +170,5 @@ class App
     end
 
     arr.to_table
-  end
-
-  # look up for the instance variable in the class
-  # eg list_books will find @books in the class
-  def find_array_by_method_name(method_name)
-    var_name = pluralize(method_name).to_s.split('_')[1..].join('_')
-    list = instance_variable_get("@#{var_name}")
-
-    if list.nil?
-      puts "@#{var_name} does not exist."
-      exit 1
-    end
-
-    unless list.is_a?(Array)
-      puts "@#{var_name} is not a list."
-      exit 1
-    end
-
-    [list, var_name]
-  end
-
-  # this method will ask common questions to create an item
-  def create_item
-    genre = ask_question(Genre, @genres)
-    author = ask_question(Author, @authors)
-    label = ask_question(Label, @labels)
-    publish_date = ask_date 'What is the publish date?'
-
-    { genre: genre, author: author, label: label, publish_date: publish_date }
   end
 end
