@@ -27,7 +27,7 @@ module Prompt
         hash[field] = ask "What is the #{field} of #{klass}?"
       end
 
-      item = class_from_hash(klass, hash)
+      item = from_hash(klass, hash)
       list << item
       item
     end

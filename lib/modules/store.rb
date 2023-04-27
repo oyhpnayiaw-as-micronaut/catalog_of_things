@@ -44,7 +44,7 @@ module Store
     path = create_path(name)
     if File.exist?(path)
       array = JSON.parse(File.read(path), symbolize_names: true)
-      array.map { |hash| class_from_hash(klass, hash, data: data) }
+      array.map { |hash| from_hash(klass, hash, data: data) }
     else
       []
     end

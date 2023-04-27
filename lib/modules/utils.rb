@@ -5,7 +5,7 @@ module Utils
   # This method will work well if the class don't convert during initialization
   # klass - Class object
   # hash - Hash object
-  def class_from_hash(klass, hash, data: {})
+  def from_hash(klass, hash, data: {})
     pos_params, key_params = get_specific_parameters(klass)
     depends_on = klass.depends_on if klass.respond_to?(:depends_on)
 
