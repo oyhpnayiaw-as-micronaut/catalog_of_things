@@ -13,16 +13,16 @@ class App
 
   @@models = []
   @@hidden_list = []
-  @@hidden_create = []
+  @@hidden_add = []
   @@questions = {}
 
   # extra_models: array of models that come from outside of the models folder
   #  - ps. you need to import them at the entry point of the app. e.g: main.rb
   # hidden_list: array of models that you don't want to show in the list (on the console)
-  # hidden_create: array of models that you don't want to show in the create (on the console)
-  def initialize(extra_models: [], hidden_list: [], hidden_create: [], questions: {})
+  # hidden_add: array of models that you don't want to show in the add (on the console)
+  def initialize(extra_models: [], hidden_list: [], hidden_add: [], questions: {})
     @@hidden_list = hidden_list
-    @@hidden_create = hidden_create
+    @@hidden_add = hidden_add
     @@questions = questions
 
     Dir[File.join(__dir__, 'models', '*.rb')].sort.each do |file|
@@ -49,7 +49,7 @@ class App
       end
 
       # rubocop:disable Style/Next
-      unless @@hidden_create.include?(singularize(model))
+      unless @@hidden_add.include?(singularize(model))
         options << {
           message: "Add a new #{singularize(to_sentence_case(model).downcase)}",
           handler: "add_#{model}"
