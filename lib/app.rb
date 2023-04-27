@@ -32,10 +32,13 @@ class App
     end
 
     models.each do |model|
-      next if @@models.include?(model) || !model.is_a?(Symbol)
+      next unless model.is_a?(Symbol)
       next unless class_is_defined?(model)
 
-      @@models << pluralize(singularize(model)).to_sym
+      model = pluralize(model).to_sym
+      next if @@models.include?(model)
+
+      @@models << model
       instance_variable_set("@#{model}", [])
     end
 
@@ -97,10 +100,6 @@ class App
   end
 
   private
-
-  def clear_console
-    system('clear') || system('cls')
-  end
 
   def exit_app
     puts "\nThank you for using our app."

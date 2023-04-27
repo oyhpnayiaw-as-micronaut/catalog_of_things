@@ -51,6 +51,10 @@ module Utils
     [pos_params, key_params]
   end
 
+  def clear_console
+    system('clear') || system('cls')
+  end
+
   # Convert a string to an actual class only pass snake_case to this method
   def convert_to_class(sym)
     sym = to_class_case(singularize(sym)).to_sym
