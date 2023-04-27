@@ -5,18 +5,34 @@ module Utils
   # This method will work well if the class don't convert during initialization
   # klass - Class object
   # hash - Hash object
-  def class_from_hash(klass, hash)
+  def class_from_hash(klass, hash, data: {})
     pos_params, key_params = get_specific_parameters(klass)
+    depends_on = klass.depends_on if klass.respond_to?(:depends_on)
 
-    pos_params = pos_params.map { |param| hash[param] }
-    key_params = hash.select { |key, _| key_params.include?(key) }
+    find = ->(param) { data[pluralize(param)].find { |item| item.instance_variable_get(:@id) == hash[param] } }
 
-    instance = klass.new(*pos_params, **key_params)
-    hash.each do |key, value|
-      instance.instance_variable_set("@#{key}", value)
+    pos_params = pos_params.map do |param|
+      if depends_on&.include?(param)
+        find.call(param)
+      else
+        hash[param]
+      end
     end
 
+    key_data = {}
+    key_params.each do |param|
+      key_data[param] = if depends_on&.include?(param)
+                          find.call(param)
+                        else
+                          hash[param]
+                        end
+    end
+
+    instance = klass.new(*pos_params, **key_data)
+
+    instance.instance_variable_set(:@id, hash[:id]) unless hash[:id].nil?
     instance.instance_variable_set(:@items, []) if instance.respond_to?(:items)
+
     instance
   end
 

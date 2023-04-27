@@ -17,23 +17,8 @@ class Item
     end
   end
 
-  def self.from_hash(hash, data = {})
-    parameters = instance_method(:initialize).parameters.map { |param| param[1] }
-    ctor_hash = hash.select { |key, _| parameters.include?(key) }
-
-    %i[genre author label].each do |key|
-      ctor_hash[key] = data["#{key}s".to_sym]&.find do |item|
-        item.instance_variable_get(:@id) == ctor_hash[key]
-      end
-    end
-
-    item = new(**ctor_hash)
-
-    rest_hash = hash.reject { |key, _| parameters.include?(key) }
-    rest_hash.each do |key, value|
-      item.instance_variable_set("@#{key}", value)
-    end
-    item
+  def self.depends_on
+    %i[genre author label]
   end
 
   def can_be_archived?

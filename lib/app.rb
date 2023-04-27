@@ -35,7 +35,7 @@ class App
       next unless model.is_a?(Symbol)
       next unless class_is_defined?(model)
 
-      model = pluralize(model).to_sym
+      model = pluralize(model)
       next if @@models.include?(model)
 
       @@models << model

@@ -25,35 +25,26 @@ module Store
     instance_variables.each do |var|
       name = var.to_s.delete('@')
       klass = convert_to_class(name)
-      if klass < Item
-        items_hash[name.to_sym] = load_json(name, klass, raw: true)
+      if klass.respond_to?(:depends_on)
+        items_hash[name.to_sym] = name
       else
         data[name.to_sym] = load_json(name, klass)
       end
     end
 
-    items_hash.each do |key, _|
-      items_hash[key] = items_hash[key].map do |h|
-        klass = convert_to_class(key)
-
-        # I created a separate class method to use for item classes
-        # cuz it's depends on the data
-        # you can use class_from_hash from Utils module
-        klass.from_hash(h, data)
-      end
+    items_hash.each do |key, name|
+      items_hash[key] = load_json(name, convert_to_class(name), data: data)
     end
 
-    data.merge!(items_hash)
-    data
+    data.merge(items_hash)
   end
 
   # Load data from a JSON file
-  def load_json(name, klass, raw: false)
+  def load_json(name, klass, data: {})
     path = create_path(name)
     if File.exist?(path)
-      data = JSON.parse(File.read(path), symbolize_names: true)
-      data = data.map { |hash| class_from_hash(klass, hash) } unless raw
-      data
+      array = JSON.parse(File.read(path), symbolize_names: true)
+      array.map { |hash| class_from_hash(klass, hash, data: data) }
     else
       []
     end
