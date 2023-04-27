@@ -25,22 +25,11 @@ class App
 
     Dir[File.join(__dir__, 'models', '*.rb')].sort.each do |file|
       require file
-      file_name = pluralize(File.basename(file, '.rb'))
-      @@models << file_name
-
-      instance_variable_set("@#{file_name}", [])
+      file_name = File.basename(file, '.rb')
+      add_to_model(file_name.to_sym)
     end
 
-    models.each do |model|
-      next unless model.is_a?(Symbol)
-      next unless class_is_defined?(model)
-
-      model = pluralize(model)
-      next if @@models.include?(model)
-
-      @@models << model
-      instance_variable_set("@#{model}", [])
-    end
+    models.each { |model| add_to_model(model) }
 
     load_saved_data.each do |key, value|
       instance_variable_set("@#{key}", value || [])
@@ -105,6 +94,18 @@ class App
     puts "\nThank you for using our app."
     save_data
     exit
+  end
+
+  def add_to_model(model)
+    return unless model.is_a?(Symbol)
+    return unless class_is_defined?(model)
+    return if get_parameters(convert_to_class(model)).empty?
+
+    model = pluralize(model)
+    return if @@models.include?(model)
+
+    @@models << model
+    instance_variable_set("@#{model}", [])
   end
 
   def method_missing(method_name, *args, &block)
