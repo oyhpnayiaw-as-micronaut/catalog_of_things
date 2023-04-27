@@ -16,11 +16,11 @@ class App
   @@hidden_create = []
   @@questions = {}
 
-  # models: array of models that come from outside of the models folder
+  # extra_models: array of models that come from outside of the models folder
   #  - ps. you need to import them at the entry point of the app. e.g: main.rb
   # hidden_list: array of models that you don't want to show in the list (on the console)
   # hidden_create: array of models that you don't want to show in the create (on the console)
-  def initialize(models: [], hidden_list: [], hidden_create: [], questions: {})
+  def initialize(extra_models: [], hidden_list: [], hidden_create: [], questions: {})
     @@hidden_list = hidden_list
     @@hidden_create = hidden_create
     @@questions = questions
@@ -31,7 +31,7 @@ class App
       add_to_model(file_name.to_sym)
     end
 
-    models.each { |model| add_to_model(model) }
+    extra_models.each { |model| add_to_model(model) }
 
     load_saved_data.each do |key, value|
       instance_variable_set("@#{key}", value || [])
