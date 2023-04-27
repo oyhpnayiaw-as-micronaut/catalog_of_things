@@ -39,7 +39,7 @@ class App
   def start
     options = []
     @@models.each do |model|
-      unless @@hidden_list.include?(singularize(model).to_sym)
+      unless @@hidden_list.include?(singularize(model))
         options << {
           message: "List all #{to_sentence_case(model).downcase}",
           handler: "list_#{model}"
@@ -47,7 +47,7 @@ class App
       end
 
       # rubocop:disable Style/Next
-      unless @@hidden_create.include?(singularize(model).to_sym)
+      unless @@hidden_create.include?(singularize(model))
         options << {
           message: "Add a new #{singularize(to_sentence_case(model).downcase)}",
           handler: "add_#{model}"
@@ -110,9 +110,9 @@ class App
 
   def method_missing(method_name, *args, &block)
     if method_name.to_s.start_with?('list_')
-      list_handler(method_name)
+      handle_list_method(method_name)
     elsif method_name.to_s.start_with?('add_')
-      add_handler(method_name, *args)
+      handle_add_method(method_name, *args)
     else
       super
     end
@@ -122,7 +122,7 @@ class App
     method_name.to_s.start_with?('list_') || method_name.to_s.start_with?('add_') || super
   end
 
-  def add_handler(method_name, *args)
+  def handle_add_method(method_name, *args)
     klass = convert_to_class(method_name.to_s.split('_')[1..].join('_'))
 
     pos_params, key_params = get_specific_parameters(klass)
@@ -148,27 +148,27 @@ class App
       end
     end
 
-    list, = find_array_instance_variable(method_name)
+    list, = find_array_by_method_name(method_name)
 
     list << klass.new(*pos_params, **hash)
 
     puts "#{klass} successfully created!\n----------------------\n\n"
   end
 
-  def list_handler(method_name)
-    list, var_name = find_array_instance_variable(method_name)
+  def handle_list_method(method_name)
+    list, var_name = find_array_by_method_name(method_name)
 
     if list.empty?
-      puts "There are no items in the #{var_name.split('_').join(' ')}."
+      puts "There are no items in the #{var_name}."
       return
     end
 
     if list.first.instance_variables.empty?
-      puts "The #{var_name.split('_').join(' ')} is not a list of items."
+      puts "#{to_class_case(var_name)} don't have any attributes."
       return
     end
 
-    puts to_sentence_case(var_name)
+    puts " List of #{to_sentence_case(var_name)}\n#{'-' * (var_name.size + 10)}\n"
 
     arr = []
     arr << list.first.instance_variables.map { |v| v.to_s.delete('@') }.map { |v| to_sentence_case(v) }
@@ -189,7 +189,7 @@ class App
 
   # look up for the instance variable in the class
   # eg list_books will find @books in the class
-  def find_array_instance_variable(method_name)
+  def find_array_by_method_name(method_name)
     var_name = pluralize(method_name).to_s.split('_')[1..].join('_')
     list = instance_variable_get("@#{var_name}")
 

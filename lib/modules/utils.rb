@@ -2,9 +2,11 @@ module Utils
   private
 
   # Convert hash to class instance
-  # This method will work well if the class don't convert during initialization
   # klass - Class object
   # hash - Hash object
+  # data - Hash object with other class data to use in current klass
+  #   - eg: { items: [item1, item2] }
+  #   - klass will find item according to the id in the hash
   def from_hash(klass, hash, data: {})
     pos_params, key_params = get_specific_parameters(klass)
     depends_on = klass.depends_on if klass.respond_to?(:depends_on)
@@ -74,14 +76,14 @@ module Utils
   # Convert a string to an actual class only pass snake_case to this method
   def convert_to_class(sym)
     sym = to_class_case(singularize(sym)).to_sym
-    return Object.const_get(sym) if class_is_defined?(sym, class_case: false)
+    return Object.const_get(sym) if class_is_defined?(sym, convert_to_class_case: false)
 
     puts "#{sym} is not a valid class."
     exit 1
   end
 
-  def class_is_defined?(sym, class_case: true)
-    sym = to_class_case(sym).to_sym if class_case
+  def class_is_defined?(sym, convert_to_class_case: true)
+    sym = to_class_case(sym).to_sym if convert_to_class_case
     Object.const_defined?(sym)
   end
 
