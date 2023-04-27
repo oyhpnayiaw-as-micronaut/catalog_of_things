@@ -1,11 +1,3 @@
-require_relative 'models/label'
-require_relative 'models/genre'
-require_relative 'models/author'
-require_relative 'models/item'
-require_relative 'models/book'
-require_relative 'models/game'
-require_relative 'models/music_album'
-
 require_relative 'modules/store'
 require_relative 'modules/table'
 require_relative 'modules/prompt'
@@ -18,8 +10,17 @@ class App
   include Utils
 
   def initialize
-    @genres, @authors, @labels, @books, @music_albums, @games = []
-    load_all_data.each do |key, value|
+    models = []
+
+    Dir[File.join(__dir__, 'models', '*.rb')].sort.each do |file|
+      require file
+      file_name = pluralize(File.basename(file, '.rb'))
+      models << file_name
+
+      instance_variable_set("@#{file_name}", [])
+    end
+
+    load_saved_data.each do |key, value|
       instance_variable_set("@#{key}", value || [])
     end
   end
@@ -108,11 +109,11 @@ class App
   # look up for the instance variable in the class
   # eg list_books will find @books in the class
   def find_array_instance_variable(method_name)
-    var_name = "#{method_name.to_s.delete_suffix('s')}s".split('_')[1..].join('_')
+    var_name = pluralize(method_name).to_s.split('_')[1..].join('_')
     list = instance_variable_get("@#{var_name}")
 
     if list.nil?
-      puts "@#{var_name} does not exist. Please create it first in app.rb."
+      puts "@#{var_name} does not exist."
       exit 1
     end
 

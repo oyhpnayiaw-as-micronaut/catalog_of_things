@@ -1,11 +1,5 @@
 require 'date'
 
-class ::Symbol
-  def pluralize
-    "#{self}s".to_sym
-  end
-end
-
 class Item
   attr_reader :genre, :author, :label
   attr_accessor :publish_date
@@ -28,7 +22,7 @@ class Item
     ctor_hash = hash.select { |key, _| parameters.include?(key) }
 
     %i[genre author label].each do |key|
-      ctor_hash[key] = data[key.pluralize]&.find do |item|
+      ctor_hash[key] = data["#{key}s".to_sym]&.find do |item|
         item.instance_variable_get(:@id) == ctor_hash[key]
       end
     end

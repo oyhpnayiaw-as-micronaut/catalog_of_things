@@ -65,4 +65,14 @@ module Utils
 
     [pos_params, key_params]
   end
+
+  def pluralize(item)
+    item = item.to_s
+    return item if item.end_with?('s')
+
+    return "#{item}es" if item.end_with?('ch') || item.end_with?('sh') || item.end_with?('x') || item.end_with?('z')
+    return "#{item[0..-2]}ies" if item.end_with?('y')
+
+    "#{item}s".to_sym
+  end
 end

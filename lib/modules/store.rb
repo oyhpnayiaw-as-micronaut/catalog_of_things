@@ -18,7 +18,7 @@ module Store
 
   private
 
-  def load_all_data
+  def load_saved_data
     data = {}
     items_hash = {}
 
