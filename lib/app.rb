@@ -15,7 +15,8 @@ class App
   @@hidden_list = []
   @@hidden_create = []
 
-  # models: array of models that come from outside of the models folder (ps. you need to import them at the entry point of the app. e.g: main.rb)
+  # models: array of models that come from outside of the models folder
+  #  - ps. you need to import them at the entry point of the app. e.g: main.rb
   # hidden_list: array of models that you don't want to show in the list (on the console)
   # hidden_create: array of models that you don't want to show in the create (on the console)
   def initialize(models: [], hidden_list: [], hidden_create: [])
@@ -72,10 +73,9 @@ class App
       options.each_with_index do |option, i|
         puts "#{i + 1}). #{option[:message]}"
       end
-      puts "\nPress q to exit or select an option:"
+      puts "\nSelect 'q' to exit "
 
-      print '> '
-      option = $stdin.getch
+      option = ask_inline '> '
       exit_app if option == 'q'
 
       clear_console
