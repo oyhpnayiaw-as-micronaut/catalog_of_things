@@ -88,11 +88,12 @@ module Utils
   end
 
   def to_class_case(str)
-    str.to_s.split('_').map(&:capitalize).join
+    str = singularize(str)
+    str.to_s.downcase.split('_').map(&:capitalize).join
   end
 
   def to_sentence_case(str = '')
-    str.to_s.split('_').map(&:capitalize).join(' ')
+    str.to_s.downcase.split('_').map(&:capitalize).join(' ')
   end
 
   def pluralize(item)

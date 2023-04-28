@@ -99,7 +99,7 @@ class User
 end
 ```
 
-`lib/models/Address.rb`
+`lib/models/address.rb`
 
 ```ruby
 class Address
