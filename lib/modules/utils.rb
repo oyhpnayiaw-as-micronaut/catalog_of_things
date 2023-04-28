@@ -48,7 +48,7 @@ module Utils
 
       hash[key] = if value.is_a?(Array) && !value.empty? && value.first.is_a?(Item)
                     value.map { |item| item.instance_variable_get(:@id) }
-                  elsif instance.is_a?(Item) && value.instance_variable_defined?(:@id)
+                  elsif value.instance_variable_defined?(:@id)
                     value.instance_variable_get(:@id)
                   else
                     value
